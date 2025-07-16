@@ -16,11 +16,33 @@ const uploadOnCloudinary = async (localfilePath) => {
     });
     //file has been uploaded successfully
     console.log("File uploaded successfully to Cloudinary", response);
-    fs.unlinkSync(localfilePath);
     return response;
   } catch (error) {
     fs.unlinkSync(localfilePath); // delete the local file if upload fails
     return null;
+  } finally {
+    try {
+      if (localfilePath) {
+        console.log("Attempting to delete:", localfilePath);
+        console.log(
+          "File exists before delete:",
+          await fs.exists(localfilePath)
+        );
+
+        const stats = await fs.stat(localfilePath).catch(() => null);
+        console.log("File stats:", stats);
+
+        await fs.unlink(localfilePath);
+        console.log("Deletion successful");
+      }
+    } catch (finalError) {
+      console.error("Final cleanup error details:", {
+        message: finalError.message,
+        code: finalError.code,
+        path: localfilePath,
+        time: new Date().toISOString(),
+      });
+    }
   }
 };
 
