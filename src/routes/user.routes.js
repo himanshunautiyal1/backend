@@ -33,10 +33,10 @@ router.route("/register").post(
 
 //unsecured routes
 router.route("/login").post(loginUser);
+router.route("/refresh").post(refreshAccesstoken);
 
 //secured routes
 router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/refresh").post(refreshAccesstoken);
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/update-account").patch(verifyJWT, updateAccountDetails);
